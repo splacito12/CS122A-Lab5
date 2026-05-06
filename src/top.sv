@@ -6,7 +6,7 @@ module top (
     output LCD_CLK,
     output LCD_DEN,
     output [4:0] LCD_R,
-    output [4:0] LCD_G,
+    output [5:0] LCD_G,
     output [4:0] LCD_B,
 );
 
@@ -54,19 +54,25 @@ assign LCD_DEN = (x_cnt < active_x) && (y_cnt < active_y);
         2. Green: assigned the middle bits (when its < 320)
         3. Blue: assigned the upper bits (when its >= 320)
 */
-if(LCD_DEN) begin
-    if(x_cnt < 160) begin
-        LCD_R = 5'd31;
-        LCD_G = 6'd0;
-        LCD_B = 5'd0;
-    end else if(x_cnt < 320) begin
-        LCD_R = 5'd0;
-        LCD_G = 6'd63;
-        LCD_B = 5'd0;
+always@(*) begin
+    if(LCD_DEN) begin
+        if(x_cnt < 160) begin
+            LCD_R = 5'd31;
+            LCD_G = 6'd0;
+            LCD_B = 5'd0;
+        end else if(x_cnt < 320) begin
+            LCD_R = 5'd0;
+            LCD_G = 6'd63;
+            LCD_B = 5'd0;
+        end else begin
+            LCD_R = 5'd0;
+            LCD_G = 6'd0;
+            LCD_B = 5'd31;
+        end
     end else begin
         LCD_R = 5'd0;
         LCD_G = 6'd0;
-        LCD_B = 5'd31;
+        LCD_B = 5'd0;
     end
 end
 
